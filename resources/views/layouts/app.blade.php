@@ -502,7 +502,7 @@
             <section class="panel">
                 <div class="panel-inner">
                     @if (session('success'))
-                        <div class="alert alert-success">{{ session('success') }}</div>
+                        <div id="swal-flash-message" data-message="{{ session('success') }}" hidden></div>
                     @endif
 
                     @if ($errors->any())
@@ -521,37 +521,8 @@
             </section>
         </main>
     </div>
-    <script>
-        document.addEventListener('submit', function(event) {
-            const form = event.target;
-
-            if (!(form instanceof HTMLFormElement) || !form.matches('[data-confirm]')) {
-                return;
-            }
-
-            event.preventDefault();
-
-            const title = form.dataset.confirmTitle || 'Are you sure?';
-            const text = form.dataset.confirmText || 'Please confirm this action.';
-            const confirmText = form.dataset.confirmButton || 'Confirm';
-            const cancelText = form.dataset.cancelButton || 'Cancel';
-
-            Swal.fire({
-                title,
-                text,
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonText: confirmText,
-                cancelButtonText: cancelText,
-                reverseButtons: true,
-                focusCancel: true,
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    form.submit();
-                }
-            });
-        });
-    </script>
+    <script defer src="{{ asset('js/task-ui.js') }}"></script>
+    <script defer src="{{ asset('js/task-flash.js') }}"></script>
 </body>
 
 </html>

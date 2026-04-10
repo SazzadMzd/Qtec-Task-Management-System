@@ -1,9 +1,3 @@
-@php
-    $pendingCount = $tasks->where('status', \App\Models\Task::STATUS_PENDING)->count();
-    $inProgressCount = $tasks->where('status', \App\Models\Task::STATUS_IN_PROGRESS)->count();
-    $completedCount = $tasks->where('status', \App\Models\Task::STATUS_COMPLETED)->count();
-@endphp
-
 @extends('layouts.app', [
     'title' => 'Tasks | ' . config('app.name'),
     'heading' => 'Daily Task Board',
@@ -11,7 +5,7 @@
     'heroMetrics' => [
         ['value' => $tasks->count(), 'label' => 'Visible tasks'],
         ['value' => $selectedStatus ? str($selectedStatus)->replace('_', ' ')->title() : 'All', 'label' => 'Current view'],
-        ['value' => $completedCount, 'label' => 'Completed'],
+        ['value' => $statusCounts[\App\Models\Task::STATUS_COMPLETED], 'label' => 'Completed'],
     ],
 ])
 
@@ -28,19 +22,19 @@
     <div class="filters" style="margin-bottom: 22px;">
         <a href="{{ route('tasks.index') }}" class="filter-pill {{ $selectedStatus ? '' : 'active' }}">
             All Tasks
-            <span>{{ $tasks->count() }}</span>
+            <span>{{ $statusCounts['all'] }}</span>
         </a>
         <a href="{{ route('tasks.index', ['status' => \App\Models\Task::STATUS_PENDING]) }}" class="filter-pill {{ $selectedStatus === \App\Models\Task::STATUS_PENDING ? 'active' : '' }}">
             Pending
-            <span>{{ $pendingCount }}</span>
+            <span>{{ $statusCounts[\App\Models\Task::STATUS_PENDING] }}</span>
         </a>
         <a href="{{ route('tasks.index', ['status' => \App\Models\Task::STATUS_IN_PROGRESS]) }}" class="filter-pill {{ $selectedStatus === \App\Models\Task::STATUS_IN_PROGRESS ? 'active' : '' }}">
             In Progress
-            <span>{{ $inProgressCount }}</span>
+            <span>{{ $statusCounts[\App\Models\Task::STATUS_IN_PROGRESS] }}</span>
         </a>
         <a href="{{ route('tasks.index', ['status' => \App\Models\Task::STATUS_COMPLETED]) }}" class="filter-pill {{ $selectedStatus === \App\Models\Task::STATUS_COMPLETED ? 'active' : '' }}">
             Completed
-            <span>{{ $completedCount }}</span>
+            <span>{{ $statusCounts[\App\Models\Task::STATUS_COMPLETED] }}</span>
         </a>
     </div>
 

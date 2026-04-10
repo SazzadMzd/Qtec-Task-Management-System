@@ -16,6 +16,16 @@ class TaskRepository implements TaskRepositoryInterface
             ->get();
     }
 
+    public function getStatusCounts(): array
+    {
+        return [
+            'all' => Task::count(),
+            Task::STATUS_PENDING => Task::query()->status(Task::STATUS_PENDING)->count(),
+            Task::STATUS_IN_PROGRESS => Task::query()->status(Task::STATUS_IN_PROGRESS)->count(),
+            Task::STATUS_COMPLETED => Task::query()->status(Task::STATUS_COMPLETED)->count(),
+        ];
+    }
+
     public function findById(int $id): ?Task
     {
         return Task::find($id);

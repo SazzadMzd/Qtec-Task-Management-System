@@ -18,6 +18,11 @@ class TaskService
         return $this->taskRepository->getAll($this->normalizeStatus($status));
     }
 
+    public function getStatusCounts(): array
+    {
+        return $this->taskRepository->getStatusCounts();
+    }
+
     public function findById(int $id): ?Task
     {
         return $this->taskRepository->findById($id);

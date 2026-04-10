@@ -23,6 +23,7 @@ class TaskController extends Controller
 
         return view('tasks.index', [
             'tasks' => $this->taskService->getAll($status),
+            'statusCounts' => $this->taskService->getStatusCounts(),
             'selectedStatus' => $status,
             'statuses' => Task::statuses(),
         ]);

@@ -9,6 +9,8 @@ interface TaskRepositoryInterface
 {
     public function getAll(?string $status = null): Collection;
 
+    public function getStatusCounts(): array;
+
     public function findById(int $id): ?Task;
 
     public function create(array $data): Task;

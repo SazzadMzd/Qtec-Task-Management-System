@@ -1,7 +1,7 @@
 @extends('layouts.app', [
     'title' => 'Edit Task | ' . config('app.name'),
     'heading' => 'Refine Task Details',
-    'subheading' => 'Update the task information and keep the board aligned with the actual progress of work.',
+    'subheading' => 'Update the task information, schedule, and status so the board stays aligned with the actual progress of work.',
     'heroMetrics' => [
         ['value' => $task->id, 'label' => 'Task ID'],
         ['value' => str($task->status)->replace('_', ' ')->title(), 'label' => 'Current status'],
@@ -13,7 +13,7 @@
     <div class="panel-head">
         <div>
             <h2 class="panel-title">Edit Task</h2>
-            <p class="panel-subtitle">Adjust the task details without losing the existing workflow context.</p>
+            <p class="panel-subtitle">Adjust the task details and schedule without losing the existing workflow context.</p>
         </div>
     </div>
 

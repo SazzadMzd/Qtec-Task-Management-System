@@ -18,7 +18,10 @@ class StoreTaskRequest extends FormRequest
         return [
             'title' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
+            'assigned_to' => ['required', 'string', 'max:255'],
             'status' => ['required', 'string', Rule::in(Task::statuses())],
+            'start_time' => ['required', 'date'],
+            'end_time' => ['required', 'date', 'after:start_time'],
         ];
     }
 }

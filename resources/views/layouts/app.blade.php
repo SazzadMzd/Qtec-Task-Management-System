@@ -120,7 +120,7 @@
         }
 
         .hero p {
-            max-width: 720px;
+            max-width: 820px;
             margin: 0;
             color: rgba(247, 251, 255, 0.84);
             font-size: 1rem;
@@ -129,9 +129,9 @@
 
         .hero-meta {
             display: grid;
-            grid-template-columns: repeat(3, minmax(120px, 1fr));
+            grid-template-columns: repeat(4, minmax(120px, 1fr));
             gap: 12px;
-            width: min(100%, 360px);
+            width: min(100%, 620px);
         }
 
         .metric {
@@ -257,6 +257,85 @@
             gap: 10px;
         }
 
+        .filter-toolbar {
+            display: grid;
+            gap: 16px;
+            margin-bottom: 26px;
+            padding: 18px;
+            border: 1px solid rgba(9, 30, 66, 0.08);
+            border-radius: var(--radius-lg);
+            background: linear-gradient(180deg, rgba(247, 249, 252, 0.92), rgba(255, 255, 255, 0.88));
+        }
+
+        .filter-toolbar-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .filter-toolbar-title {
+            margin: 0;
+            font-family: "Space Grotesk", sans-serif;
+            font-size: 1.02rem;
+        }
+
+        .filter-toolbar-copy {
+            margin: 4px 0 0;
+            color: var(--muted);
+            font-size: 0.92rem;
+        }
+
+        .filter-toolbar-form {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 14px;
+            align-items: end;
+        }
+
+        .filter-field {
+            display: grid;
+            gap: 7px;
+        }
+
+        .filter-field label {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--secondary-ink);
+        }
+
+        .filter-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .filter-summary {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 12px;
+        }
+
+        .filter-stat {
+            padding: 14px 16px;
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.88);
+            border: 1px solid rgba(9, 30, 66, 0.08);
+        }
+
+        .filter-stat strong {
+            display: block;
+            font-family: "Space Grotesk", sans-serif;
+            font-size: 1.1rem;
+        }
+
+        .filter-stat span {
+            color: var(--muted);
+            font-size: 0.88rem;
+        }
+
         .filter-pill {
             display: inline-flex;
             align-items: center;
@@ -352,6 +431,38 @@
             gap: 10px;
             justify-content: flex-end;
             flex-wrap: wrap;
+        }
+
+        .status-inline-form {
+            display: flex;
+            align-items: stretch;
+            gap: 0;
+            justify-content: flex-end;
+        }
+
+        .status-inline-form .control {
+            min-width: 128px;
+            width: 128px;
+            padding: 8px 10px;
+            border-radius: 12px;
+            font-size: 0.9rem;
+        }
+
+        .btn-compact {
+            padding: 10px 14px;
+            font-size: 0.92rem;
+        }
+
+        .icon-btn {
+            width: 40px;
+            height: 40px;
+            padding: 0;
+            border-radius: 12px;
+        }
+
+        .icon-btn svg {
+            width: 18px;
+            height: 18px;
         }
 
         .empty-state {
@@ -463,11 +574,20 @@
                 width: 100%;
             }
 
+            .filter-toolbar-form,
+            .filter-summary {
+                grid-template-columns: 1fr;
+            }
+
             .task-card {
                 grid-template-columns: 1fr;
             }
 
             .task-actions {
+                justify-content: flex-start;
+            }
+
+            .status-inline-form {
                 justify-content: flex-start;
             }
         }
@@ -479,9 +599,9 @@
         <section class="hero">
             <div class="hero-row">
                 <div>
-                    <span class="eyebrow">Daily Work Control</span>
+                    <span class="eyebrow">{{ $eyebrow ?? 'Qtec Task Management System' }}</span>
                     <h1>{{ $heading ?? 'Task Management System' }}</h1>
-                    <p>{{ $subheading ?? 'Keep daily work visible, manageable, and easy to update with a focused Laravel task workflow.' }}
+                    <p>{{ $subheading ?? 'Keep tasks visible, manageable, and easy to update with a focused Laravel task workflow.' }}
                     </p>
                 </div>
 

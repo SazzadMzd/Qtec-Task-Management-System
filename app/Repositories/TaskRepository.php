@@ -4,25 +4,38 @@ namespace App\Repositories;
 
 use App\Interfaces\TaskRepositoryInterface;
 use App\Models\Task;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Builder;
 
 class TaskRepository implements TaskRepositoryInterface
 {
-    public function getAll(?string $status = null): Collection
+    public function getAll(?string $status = null, ?string $focus = null): Collection
     {
-        return Task::query()
-            ->status($status)
-            ->latest()
+        return $this->applyOrdering(
+            Task::query()->status($status),
+            $focus
+        )
             ->get();
     }
 
-    public function getStatusCounts(): array
+    public function getStatusCounts(?string $focus = null): array
     {
         return [
-            'all' => Task::count(),
-            Task::STATUS_PENDING => Task::query()->status(Task::STATUS_PENDING)->count(),
-            Task::STATUS_IN_PROGRESS => Task::query()->status(Task::STATUS_IN_PROGRESS)->count(),
-            Task::STATUS_COMPLETED => Task::query()->status(Task::STATUS_COMPLETED)->count(),
+            'all' => $this->applyFocus(Task::query(), $focus)->count(),
+            Task::STATUS_PENDING => $this->applyFocus(Task::query()->status(Task::STATUS_PENDING), $focus)->count(),
+            Task::STATUS_IN_PROGRESS => $this->applyFocus(Task::query()->status(Task::STATUS_IN_PROGRESS), $focus)->count(),
+            Task::STATUS_COMPLETED => $this->applyFocus(Task::query()->status(Task::STATUS_COMPLETED), $focus)->count(),
+        ];
+    }
+
+    public function getFocusCounts(?string $status = null): array
+    {
+        return [
+            'all' => Task::query()->status($status)->count(),
+            'overdue' => $this->applyFocus(Task::query()->status($status), 'overdue')->count(),
+            'ending_soon' => $this->applyFocus(Task::query()->status($status), 'ending_soon')->count(),
+            'newly_created' => $this->applyFocus(Task::query()->status($status), 'newly_created')->count(),
         ];
     }
 
@@ -49,5 +62,34 @@ class TaskRepository implements TaskRepositoryInterface
         $task = Task::findOrFail($id);
 
         return (bool) $task->delete();
+    }
+
+    private function applyFocus(Builder $query, ?string $focus): Builder
+    {
+        $now = Carbon::now();
+
+        return match ($focus) {
+            'overdue' => $query
+                ->where('status', '!=', Task::STATUS_COMPLETED)
+                ->where('end_time', '<', $now),
+            'ending_soon' => $query
+                ->where('status', '!=', Task::STATUS_COMPLETED)
+                ->where('end_time', '>=', $now),
+            'newly_created' => $query
+                ->where('created_at', '>=', $now->copy()->subDay()),
+            default => $query,
+        };
+    }
+
+    private function applyOrdering(Builder $query, ?string $focus): Builder
+    {
+        $query = $this->applyFocus($query, $focus);
+
+        return match ($focus) {
+            'ending_soon' => $query->orderBy('end_time')->orderBy('start_time'),
+            'newly_created' => $query->latest(),
+            'overdue' => $query->orderByDesc('end_time'),
+            default => $query->latest(),
+        };
     }
 }

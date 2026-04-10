@@ -20,11 +20,16 @@ class TaskController extends Controller
     public function index(Request $request): View
     {
         $status = $request->query('status');
+        $focus = $request->query('focus');
 
         return view('tasks.index', [
-            'tasks' => $this->taskService->getAll($status),
-            'statusCounts' => $this->taskService->getStatusCounts(),
+            'tasks' => $this->taskService->getAll($status, $focus),
+            'statusCounts' => $this->taskService->getStatusCounts($focus),
+            'focusCounts' => $this->taskService->getFocusCounts($status),
+            'globalStatusCounts' => $this->taskService->getStatusCounts(),
+            'globalFocusCounts' => $this->taskService->getFocusCounts(),
             'selectedStatus' => $status,
+            'selectedFocus' => $focus,
             'statuses' => Task::statuses(),
         ]);
     }
@@ -63,6 +68,24 @@ class TaskController extends Controller
         return redirect()
             ->route('tasks.index')
             ->with('success', 'Task updated successfully.');
+    }
+
+    public function updateStatus(Request $request, Task $task): RedirectResponse
+    {
+        $validated = $request->validate([
+            'status' => ['required', 'string', \Illuminate\Validation\Rule::in(Task::statuses())],
+            'status_filter' => ['nullable', 'string'],
+            'focus_filter' => ['nullable', 'string'],
+        ]);
+
+        $this->taskService->updateStatus($task->id, $validated['status']);
+
+        return redirect()
+            ->route('tasks.index', array_filter([
+                'status' => $validated['status_filter'] ?? null,
+                'focus' => $validated['focus_filter'] ?? null,
+            ]))
+            ->with('success', 'Task status updated successfully.');
     }
 
     public function destroy(Task $task): RedirectResponse

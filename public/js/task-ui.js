@@ -27,3 +27,19 @@ document.addEventListener('submit', function (event) {
         }
     });
 });
+
+document.addEventListener('change', function (event) {
+    const field = event.target;
+
+    if (!(field instanceof HTMLSelectElement)) {
+        return;
+    }
+
+    const form = field.form;
+
+    if (!(form instanceof HTMLFormElement) || !form.matches('[data-auto-submit]')) {
+        return;
+    }
+
+    form.requestSubmit();
+});

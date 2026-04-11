@@ -43,3 +43,25 @@ document.addEventListener('change', function (event) {
 
     form.requestSubmit();
 });
+
+let liveSearchDebounceTimer;
+
+document.addEventListener('input', function (event) {
+    const field = event.target;
+
+    if (!(field instanceof HTMLInputElement) || !field.matches('[data-live-search]')) {
+        return;
+    }
+
+    const form = field.form;
+
+    if (!(form instanceof HTMLFormElement)) {
+        return;
+    }
+
+    window.clearTimeout(liveSearchDebounceTimer);
+
+    liveSearchDebounceTimer = window.setTimeout(() => {
+        form.requestSubmit();
+    }, 250);
+});

@@ -7,11 +7,11 @@ use Illuminate\Database\Eloquent\Collection;
 
 interface TaskRepositoryInterface
 {
-    public function getAll(?string $status = null, ?string $focus = null): Collection;
+    public function getAll(?string $status = null, ?string $focus = null, ?string $search = null): Collection;
 
-    public function getStatusCounts(?string $focus = null): array;
+    public function getStatusCounts(?string $focus = null, ?string $search = null): array;
 
-    public function getFocusCounts(?string $status = null): array;
+    public function getFocusCounts(?string $status = null, ?string $search = null): array;
 
     public function findById(int $id): ?Task;
 

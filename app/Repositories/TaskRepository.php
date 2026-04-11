@@ -10,32 +10,32 @@ use Illuminate\Database\Eloquent\Builder;
 
 class TaskRepository implements TaskRepositoryInterface
 {
-    public function getAll(?string $status = null, ?string $focus = null): Collection
+    public function getAll(?string $status = null, ?string $focus = null, ?string $search = null): Collection
     {
         return $this->applyOrdering(
-            Task::query()->status($status),
+            $this->applySearch(Task::query()->status($status), $search),
             $focus
         )
             ->get();
     }
 
-    public function getStatusCounts(?string $focus = null): array
+    public function getStatusCounts(?string $focus = null, ?string $search = null): array
     {
         return [
-            'all' => $this->applyFocus(Task::query(), $focus)->count(),
-            Task::STATUS_PENDING => $this->applyFocus(Task::query()->status(Task::STATUS_PENDING), $focus)->count(),
-            Task::STATUS_IN_PROGRESS => $this->applyFocus(Task::query()->status(Task::STATUS_IN_PROGRESS), $focus)->count(),
-            Task::STATUS_COMPLETED => $this->applyFocus(Task::query()->status(Task::STATUS_COMPLETED), $focus)->count(),
+            'all' => $this->applyFocus($this->applySearch(Task::query(), $search), $focus)->count(),
+            Task::STATUS_PENDING => $this->applyFocus($this->applySearch(Task::query()->status(Task::STATUS_PENDING), $search), $focus)->count(),
+            Task::STATUS_IN_PROGRESS => $this->applyFocus($this->applySearch(Task::query()->status(Task::STATUS_IN_PROGRESS), $search), $focus)->count(),
+            Task::STATUS_COMPLETED => $this->applyFocus($this->applySearch(Task::query()->status(Task::STATUS_COMPLETED), $search), $focus)->count(),
         ];
     }
 
-    public function getFocusCounts(?string $status = null): array
+    public function getFocusCounts(?string $status = null, ?string $search = null): array
     {
         return [
-            'all' => Task::query()->status($status)->count(),
-            'overdue' => $this->applyFocus(Task::query()->status($status), 'overdue')->count(),
-            'ending_soon' => $this->applyFocus(Task::query()->status($status), 'ending_soon')->count(),
-            'newly_created' => $this->applyFocus(Task::query()->status($status), 'newly_created')->count(),
+            'all' => $this->applySearch(Task::query()->status($status), $search)->count(),
+            'overdue' => $this->applyFocus($this->applySearch(Task::query()->status($status), $search), 'overdue')->count(),
+            'ending_soon' => $this->applyFocus($this->applySearch(Task::query()->status($status), $search), 'ending_soon')->count(),
+            'newly_created' => $this->applyFocus($this->applySearch(Task::query()->status($status), $search), 'newly_created')->count(),
         ];
     }
 
@@ -79,6 +79,19 @@ class TaskRepository implements TaskRepositoryInterface
                 ->where('created_at', '>=', $now->copy()->subDay()),
             default => $query,
         };
+    }
+
+    private function applySearch(Builder $query, ?string $search): Builder
+    {
+        if (blank($search)) {
+            return $query;
+        }
+
+        return $query->where(function (Builder $builder) use ($search) {
+            $builder
+                ->where('title', 'like', '%' . $search . '%')
+                ->orWhere('assigned_to', 'like', '%' . $search . '%');
+        });
     }
 
     private function applyOrdering(Builder $query, ?string $focus): Builder

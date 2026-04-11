@@ -1,5 +1,6 @@
 @extends('layouts.app', [
     'title' => 'Edit Task | ' . config('app.name'),
+    'eyebrowHref' => url('/'),
     'heading' => 'Refine Task Details',
     'subheading' => 'Update the task information, schedule, and status so the board stays aligned with the actual progress of work.',
     'heroMetrics' => [

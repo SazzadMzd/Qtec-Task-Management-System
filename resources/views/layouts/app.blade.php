@@ -112,6 +112,11 @@
             text-transform: uppercase;
         }
 
+        .eyebrow-link {
+            display: inline-flex;
+            align-items: center;
+        }
+
         .hero h1 {
             margin: 16px 0 10px;
             font-family: "Space Grotesk", sans-serif;
@@ -537,6 +542,115 @@
             flex-wrap: wrap;
         }
 
+        .landing-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1.3fr) minmax(280px, 0.7fr);
+            gap: 18px;
+        }
+
+        .landing-stack {
+            display: grid;
+            gap: 18px;
+        }
+
+        .landing-card {
+            padding: 22px;
+            border-radius: var(--radius-lg);
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(247, 249, 252, 0.92));
+            border: 1px solid rgba(9, 30, 66, 0.08);
+        }
+
+        .landing-card h2,
+        .landing-card h3 {
+            margin: 0 0 12px;
+            font-family: "Space Grotesk", sans-serif;
+        }
+
+        .landing-card p {
+            margin: 0;
+            color: var(--muted);
+            line-height: 1.7;
+        }
+
+        .landing-actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .feature-list,
+        .quick-steps {
+            display: grid;
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        .feature-item,
+        .step-item {
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+            padding: 14px 16px;
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.78);
+            border: 1px solid rgba(9, 30, 66, 0.08);
+        }
+
+        .feature-icon,
+        .step-number {
+            flex: 0 0 auto;
+            width: 34px;
+            height: 34px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            font-weight: 700;
+            background: var(--brand-soft);
+            color: var(--brand-deep);
+        }
+
+        .feature-copy strong,
+        .step-copy strong {
+            display: block;
+            margin-bottom: 4px;
+            color: var(--ink);
+        }
+
+        .feature-copy span,
+        .step-copy span {
+            color: var(--muted);
+            font-size: 0.94rem;
+            line-height: 1.6;
+        }
+
+        .landing-stat-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        .landing-stat {
+            padding: 16px;
+            border-radius: 18px;
+            background: rgba(12, 102, 228, 0.06);
+            border: 1px solid rgba(12, 102, 228, 0.12);
+        }
+
+        .landing-stat strong {
+            display: block;
+            font-family: "Space Grotesk", sans-serif;
+            font-size: 1.35rem;
+            margin-bottom: 4px;
+        }
+
+        .landing-stat span {
+            color: var(--muted);
+            font-size: 0.9rem;
+        }
+
         .swal2-popup {
             border-radius: 22px;
             font-family: "Instrument Sans", sans-serif;
@@ -575,7 +689,9 @@
             }
 
             .filter-toolbar-form,
-            .filter-summary {
+            .filter-summary,
+            .landing-grid,
+            .landing-stat-grid {
                 grid-template-columns: 1fr;
             }
 
@@ -591,6 +707,20 @@
                 justify-content: flex-start;
             }
         }
+
+        .developer-credit {
+            text-align: center;
+            margin-top: 4rem;
+            padding: 2rem 0;
+            color: #6b7280;
+            font-size: 0.95rem;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .developer-credit strong {
+            color: #374151;
+            font-weight: 600;
+        }
     </style>
 </head>
 
@@ -599,7 +729,11 @@
         <section class="hero">
             <div class="hero-row">
                 <div>
-                    <span class="eyebrow">{{ $eyebrow ?? 'Qtec Task Management System' }}</span>
+                    @if (!empty($eyebrowHref))
+                        <a href="{{ $eyebrowHref }}" class="eyebrow eyebrow-link">{{ $eyebrow ?? 'Qtec Task Management System' }}</a>
+                    @else
+                        <span class="eyebrow">{{ $eyebrow ?? 'Qtec Task Management System' }}</span>
+                    @endif
                     <h1>{{ $heading ?? 'Task Management System' }}</h1>
                     <p>{{ $subheading ?? 'Keep tasks visible, manageable, and easy to update with a focused Laravel task workflow.' }}
                     </p>

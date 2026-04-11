@@ -1,5 +1,6 @@
 @extends('layouts.app', [
     'title' => 'Create Task | ' . config('app.name'),
+    'eyebrowHref' => url('/'),
     'heading' => 'Create a Task',
     'subheading' => 'Capture the task clearly and define its schedule so progress tracking and handoffs stay easy later.',
     'heroMetrics' => [

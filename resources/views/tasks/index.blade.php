@@ -1,5 +1,6 @@
 @extends('layouts.app', [
     'title' => 'Tasks | ' . config('app.name'),
+    'eyebrowHref' => url('/'),
     'heading' => 'Task Management Board',
     'subheading' => 'Track planned work, active work, and completed work in one clear workspace with scheduling built in.',
     'heroMetrics' => [['value' => $globalStatusCounts['all'], 'label' => 'Total tasks'], ['value' => $globalStatusCounts[\App\Models\Task::STATUS_PENDING], 'label' => 'Pending'], ['value' => $globalStatusCounts[\App\Models\Task::STATUS_IN_PROGRESS], 'label' => 'In Progress'], ['value' => $globalStatusCounts[\App\Models\Task::STATUS_COMPLETED], 'label' => 'Completed']],
@@ -24,6 +25,12 @@
         </div>
 
         <form method="GET" action="{{ route('tasks.index') }}" class="filter-toolbar-form">
+            <div class="filter-field">
+                <label for="search">Search tasks</label>
+                <input id="search" name="search" type="search" class="control" value="{{ $selectedSearch }}"
+                    placeholder="Search by title or assignee" autocomplete="off" data-live-search>
+            </div>
+
             <div class="filter-field">
                 <label for="status">Status view</label>
                 <select id="status" name="status" class="control">
@@ -112,6 +119,7 @@
                             @method('PATCH')
                             <input type="hidden" name="status_filter" value="{{ $selectedStatus }}">
                             <input type="hidden" name="focus_filter" value="{{ $selectedFocus }}">
+                            <input type="hidden" name="search_filter" value="{{ $selectedSearch }}">
                             <select name="status" class="control" aria-label="Update task status for {{ $task->title }}">
                                 @foreach ($statuses as $status)
                                     <option value="{{ $status }}" @selected($task->status === $status)>

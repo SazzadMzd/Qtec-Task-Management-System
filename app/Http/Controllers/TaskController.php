@@ -21,15 +21,17 @@ class TaskController extends Controller
     {
         $status = $request->query('status');
         $focus = $request->query('focus');
+        $search = $request->query('search');
 
         return view('tasks.index', [
-            'tasks' => $this->taskService->getAll($status, $focus),
-            'statusCounts' => $this->taskService->getStatusCounts($focus),
-            'focusCounts' => $this->taskService->getFocusCounts($status),
+            'tasks' => $this->taskService->getAll($status, $focus, $search),
+            'statusCounts' => $this->taskService->getStatusCounts($focus, $search),
+            'focusCounts' => $this->taskService->getFocusCounts($status, $search),
             'globalStatusCounts' => $this->taskService->getStatusCounts(),
             'globalFocusCounts' => $this->taskService->getFocusCounts(),
             'selectedStatus' => $status,
             'selectedFocus' => $focus,
+            'selectedSearch' => $search,
             'statuses' => Task::statuses(),
         ]);
     }
@@ -76,6 +78,7 @@ class TaskController extends Controller
             'status' => ['required', 'string', \Illuminate\Validation\Rule::in(Task::statuses())],
             'status_filter' => ['nullable', 'string'],
             'focus_filter' => ['nullable', 'string'],
+            'search_filter' => ['nullable', 'string'],
         ]);
 
         $this->taskService->updateStatus($task->id, $validated['status']);
@@ -84,6 +87,7 @@ class TaskController extends Controller
             ->route('tasks.index', array_filter([
                 'status' => $validated['status_filter'] ?? null,
                 'focus' => $validated['focus_filter'] ?? null,
+                'search' => $validated['search_filter'] ?? null,
             ]))
             ->with('success', 'Task status updated successfully.');
     }

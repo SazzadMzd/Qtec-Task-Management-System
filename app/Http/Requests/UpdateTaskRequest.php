@@ -20,8 +20,12 @@ class UpdateTaskRequest extends FormRequest
             'description' => ['nullable', 'string'],
             'assigned_to' => ['required', 'string', 'max:255'],
             'status' => ['required', 'string', Rule::in(Task::statuses())],
-            'start_time' => ['required', 'date'],
-            'end_time' => ['required', 'date', 'after:start_time'],
+            'start_time' => ['nullable', 'date'],
+            'end_time' => array_filter([
+                'nullable',
+                'date',
+                $this->filled('start_time') ? 'after:start_time' : null,
+            ]),
         ];
     }
 }
